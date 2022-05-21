@@ -1,0 +1,73 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // complete access to admins
+    match /{document=**} {
+      allow read, write: if validUser(request)
+      	&& isAdmin(getUser(request.auth.uid));
+    }
+    // complete read access to Managers
+    match /{document=**} {
+      allow read: if validUser(request)
+      	&& isManager(getUser(request.auth.uid));
+    }
+    
+  	match /user/{userID} {
+      // allow rights to yourself
+      allow read, write: if validUser(request) && request.auth.uid == userID;    
+    }
+    
+    match /groups/{groupID} {
+      allow read, write: if false;
+    }
+    
+    match /roles/{roleID} {
+      allow read, write: if false;    
+    }
+    
+    match /rights/{rightsID} {
+      allow read, write: if false;    
+    }
+    
+    match /documents/{roleID} {
+      allow write: if false;    
+    }
+    
+    
+    // check if user is authorized and in the database
+    function validUser(request) {
+      let user = get(/databases/$(database)/documents/Users/$(request.auth.uid)).data;
+      return request.auth != null && exists(/databases/$(database)/documents/Users/$(request.auth.uid))
+        && ('User' in user.Groups || 'User' in user.Roles || 'UserRuleSet' in user.Rights) 
+    }
+
+    function getUser(uid) {
+      return get(/databases/$(database)/documents/Users/$(uid))
+    }
+
+    // Admin Access
+    function isAdmin(User) {
+    	return hasAdminRules(User.data)
+      	|| (/databases/$(database)/documents/Roles/Admin in User.data.Roles && hasAdminRules(get(/databases/$(database)/documents/Roles/Admin).data))
+      	|| (/databases/$(database)/documents/Groups/Admin in User.data.Groups && hasAdminRules(get(/databases/$(database)/documents/Groups/Admin).data))
+    }
+
+    function hasAdminRules(Entity) {
+    // TODO Check Admin RuleSet Permission
+    	return /databases/$(database)/documents/Rights/AdminRuleSet in Entity.Rights
+    }
+    
+    
+    // Manager Access
+    function isManager(User) {
+    	return hasManagerAccess(User.data)
+      	|| (/databases/$(database)/documents/Roles/Manager in User.data.Roles && hasManagerAccess(get(/databases/$(database)/documents/Roles/Manager).data))
+      	|| (/databases/$(database)/documents/Groups/Manager in User.data.Groups && hasManagerAccess(get(/databases/$(database)/documents/Groups/Manager).data))
+    }
+    
+    function hasManagerAccess(Entity) {
+    // TODO Check Manager RuleSet Permission
+    	return /databases/$(database)/documents/Rights/ManagerRuleSet in Entity.Rights
+    }
+  }
+}

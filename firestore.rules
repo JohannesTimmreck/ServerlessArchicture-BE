@@ -12,62 +12,62 @@ service cloud.firestore {
       	&& isManager(getUser(request.auth.uid));
     }
     
-  	match /user/{userID} {
+  	match /Users/{userID} {
       // allow rights to yourself
-      allow read, write: if validUser(request) && request.auth.uid == userID;    
+      allow read, write: if validUser(request) && request.auth.uid == userID;
+      // allow update: if validUser(request) && (assignGroup(request) || assignRole(request));
     }
     
-    match /groups/{groupID} {
-      allow read, write: if false;
+    match /Groups/{groupID} {
+      allow read, write: if validUser(request) && groupID in getResource("Users", request.auth.uid);
     }
     
-    match /roles/{roleID} {
-      allow read, write: if false;    
+    match /Roles/{roleID} {
+      allow read: if validUser(request);
     }
     
-    match /rights/{rightsID} {
-      allow read, write: if false;    
+    match /Rights/{rightsID} {
+      allow read: if validUser(request);    
     }
     
-    match /documents/{roleID} {
-      allow write: if false;    
+    match /Documents/{roleID} {
+      allow read, write: if validUser(request);    
     }
     
     
-    // check if user is authorized and in the database
+    // Helper
     function validUser(request) {
-      let user = get(/databases/$(database)/documents/Users/$(request.auth.uid)).data;
-      return request.auth != null && exists(/databases/$(database)/documents/Users/$(request.auth.uid))
-        && ('User' in user.Groups || 'User' in user.Roles || 'UserRuleSet' in user.Rights) 
+      let user = getResource("Users", request.auth.uid);
+      return request.auth != null && exists("Users", request.auth.uid)
+        && ('User' in user.Groups || 'User' in user.Roles) 
     }
-
-    function getUser(uid) {
-      return get(/databases/$(database)/documents/Users/$(uid))
+    function getResource(Collection, ID) {
+      return get(/databases/$(database)/documents/$(Collection)/$(ID)).data
+    }
+    function resourceExists(Collection, ID) {
+      return exists(/databases/$(database)/documents/$(Collection)/$(ID))
     }
 
     // Admin Access
     function isAdmin(User) {
-    	return hasAdminRules(User.data)
-      	|| (/databases/$(database)/documents/Roles/Admin in User.data.Roles && hasAdminRules(get(/databases/$(database)/documents/Roles/Admin).data))
-      	|| (/databases/$(database)/documents/Groups/Admin in User.data.Groups && hasAdminRules(get(/databases/$(database)/documents/Groups/Admin).data))
+      return ("Admin" in User.data.Roles) || ("Admin" in User.data.Groups)
     }
 
-    function hasAdminRules(Entity) {
-    // TODO Check Admin RuleSet Permission
-    	return /databases/$(database)/documents/Rights/AdminRuleSet in Entity.Rights
-    }
-    
-    
     // Manager Access
     function isManager(User) {
-    	return hasManagerAccess(User.data)
-      	|| (/databases/$(database)/documents/Roles/Manager in User.data.Roles && hasManagerAccess(get(/databases/$(database)/documents/Roles/Manager).data))
-      	|| (/databases/$(database)/documents/Groups/Manager in User.data.Groups && hasManagerAccess(get(/databases/$(database)/documents/Groups/Manager).data))
+    	return ("Manager" in User.data.Roles) || ("Manager" in User.data.Groups)
     }
-    
-    function hasManagerAccess(Entity) {
-    // TODO Check Manager RuleSet Permission
-    	return /databases/$(database)/documents/Rights/ManagerRuleSet in Entity.Rights
+    // User Access
+
+    function assignGroup(request) {
+      let usr = getResource("Users", request.auth.uid);
+      let payload = request.resource.data.Payload;
+      return (payload.Type == "Group" && payload.Id in usr.Groups)
+    }
+    function assignRole(request) {
+      let usr = getResource("Users", request.auth.uid);
+      let payload = request.resource.data.Payload;
+      return (payload.Type == "Role" && payload.Id in usr.Groups)
     }
   }
 }

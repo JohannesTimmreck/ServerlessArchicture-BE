@@ -7,3 +7,5 @@ export const helloWorld = functions.https.onRequest((request, response) => {
   functions.logger.info(request.method);
   response.send("Hello from Firebase!");
 });
+
+export * from "./create_user"

@@ -1,11 +1,26 @@
 import * as functions from "firebase-functions";
+import * as admin from "firebase-admin";
+import * as express from "express";
+import * as bodyParser from "body-parser";
+import {isConnectedMiddleware} from "./helpers";
 
-// // Start writing Firebase Functions
-// // https://firebase.google.com/docs/functions/typescript
-//
-export const helloWorld = functions.https.onRequest((request, response) => {
-  functions.logger.info(request.method);
-  response.send("Hello from Firebase!");
-});
+admin.initializeApp(functions.config().firebase);
+const db = admin.firestore();
 
-export * from "./create_user"
+const app = express();
+const main = express();
+
+main.use("/api/v1", app);
+main.use(bodyParser.json());
+
+export const webApi = functions.https.onRequest(main);
+
+app.put("/warmup",
+    (req: any, res: any, next: any) =>
+        isConnectedMiddleware(req, res, next, db),
+    (request, response) => {
+        response.send("Warming up friend.");
+    }
+);
+
+export * from "./create_user";

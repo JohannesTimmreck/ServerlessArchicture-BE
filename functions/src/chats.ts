@@ -58,7 +58,7 @@ export function initChatsRoutes(app: Express, db: firestore.Firestore) {
             isConnectedMiddleware(req, res, next, db, false),
         (request: any, response: any) => {
             db.collection("Chats")
-                .where("user", "in", [request.user.uid])
+                .where("user", "array-contains", request.user.uid)
                 .orderBy("lastUpdate", "desc")
                 .get()
                 .then((value: firestore.QuerySnapshot<firestore.DocumentData>) => {

@@ -1,8 +1,8 @@
-import { isConnectedMiddleware } from "./helpers";
-import { FieldValue } from "firebase-admin/firestore";
-import { firestore } from "firebase-admin";
-import { Express } from "express";
-import { logger } from "firebase-functions";
+import {isConnectedMiddleware} from "./helpers";
+import {FieldValue} from "firebase-admin/firestore";
+import {firestore} from "firebase-admin";
+import {Express} from "express";
+import {logger} from "firebase-functions";
 
 export function initChatsRoutes(app: Express, db: firestore.Firestore) {
     const baseUrl = "/chats";
@@ -12,21 +12,21 @@ export function initChatsRoutes(app: Express, db: firestore.Firestore) {
             isConnectedMiddleware(req, res, next, db, false),
         async (request: any, response: any) => {
             if (!(request.body && request.body.name)) {
-                response.status(400).json({ message: "Need a name." });
+                response.status(400).json({message: "Need a name."});
             }
 
             if ((await db.collection("Chats").doc(request.body.name).get()).exists) {
-                response.status(400).json({ message: "This chat already exist." });
+                response.status(400).json({message: "This chat already exist."});
             }
 
             db.collection("Chats").doc(request.body.name).set({
                 user: [request.user.uid],
                 lastUpdate: FieldValue.serverTimestamp(),
             }).then((_value) => {
-                response.status(201).json({ message: "Chat created." });
+                response.status(201).json({message: "Chat created."});
             }).catch((err: any) => {
                 logger.error(err);
-                response.status(400).json({ message: err.details });
+                response.status(400).json({message: err.details});
             });
         }
     );
@@ -48,7 +48,7 @@ export function initChatsRoutes(app: Express, db: firestore.Firestore) {
                 })
                 .catch((err: any) => {
                     logger.error(err);
-                    response.status(400).json({ message: err.details });
+                    response.status(400).json({message: err.details});
                 });
         }
     );
@@ -71,7 +71,7 @@ export function initChatsRoutes(app: Express, db: firestore.Firestore) {
                 })
                 .catch((err: any) => {
                     logger.error(err);
-                    response.status(400).json({ message: err.details });
+                    response.status(400).json({message: err.details});
                 });
         }
     );
@@ -81,16 +81,16 @@ export function initChatsRoutes(app: Express, db: firestore.Firestore) {
             isConnectedMiddleware(req, res, next, db, false),
         (request: any, response: any) => {
             if (!(request.params && request.params.chatName)) {
-                response.status(400).json({ message: "Need the chat name." });
+                response.status(400).json({message: "Need the chat name."});
             }
 
             db.collection("Chats").doc(request.params.chatName).update({
                 user: FieldValue.arrayUnion(request.user.uid),
             }).then((_value: any) => {
-                response.status(200).json({ message: "Join chat." });
+                response.status(200).json({message: "Join chat."});
             }).catch((err: any) => {
                 logger.error(err);
-                response.status(400).json({ message: err.details });
+                response.status(400).json({message: err.details});
             });
         }
     );
@@ -100,16 +100,16 @@ export function initChatsRoutes(app: Express, db: firestore.Firestore) {
             isConnectedMiddleware(req, res, next, db, false),
         (request: any, response: any) => {
             if (!(request.params && request.params.chatName)) {
-                response.status(400).json({ message: "Need the chat name." });
+                response.status(400).json({message: "Need the chat name."});
             }
 
             db.collection("Chats").doc(request.params.chatName).update({
                 user: FieldValue.arrayRemove(request.user.uid),
             }).then((_value: any) => {
-                response.status(200).json({ message: "Leave chat." });
+                response.status(200).json({message: "Leave chat."});
             }).catch((err: any) => {
                 logger.error(err);
-                response.status(400).json({ message: err.details });
+                response.status(400).json({message: err.details});
             });
         }
     );

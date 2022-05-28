@@ -1,0 +1,163 @@
+{
+	"info": {
+		"_postman_id": "5ae90f4f-34f9-41fd-a811-066ea206dda6",
+		"name": "Serverless",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "14141768"
+	},
+	"item": [
+		{
+			"name": "Chats",
+			"item": [
+				{
+					"name": "Create chat",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"lol\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/chats",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"chats"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Join chat",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/chats/join/:chatName",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"chats",
+								"join",
+								":chatName"
+							],
+							"variable": [
+								{
+									"key": "chatName",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Leave chat",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/chats/leave/:chatName",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"chats",
+								"leave",
+								":chatName"
+							],
+							"variable": [
+								{
+									"key": "chatName",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all chats",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/chats",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"chats"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get mine chats",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/chats/mine",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"chats",
+								"mine"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjZmOGUxY2IxNTY0MTQ2M2M2ZGYwZjMzMzk0YjAzYzkyZmNjODg5YWMiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vZXBpdGVjaC1zZXJ2ZXJsZXNzIiwiYXVkIjoiZXBpdGVjaC1zZXJ2ZXJsZXNzIiwiYXV0aF90aW1lIjoxNjUzNzA3OTQ1LCJ1c2VyX2lkIjoiMlk5REh6QjdEbVJSWFowUVFDdFVCdm5jT1UyMyIsInN1YiI6IjJZOURIekI3RG1SUlhaMFFRQ3RVQnZuY09VMjMiLCJpYXQiOjE2NTM3MDc5NDYsImV4cCI6MTY1MzcxMTU0NiwiZW1haWwiOiJsb2xAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJmaXJlYmFzZSI6eyJpZGVudGl0aWVzIjp7ImVtYWlsIjpbImxvbEBnbWFpbC5jb20iXX0sInNpZ25faW5fcHJvdmlkZXIiOiJwYXNzd29yZCJ9fQ.i7_8lBoxe3s5PlCx6l1k6pFegjTaufwqiUdOPJzXlVmZ-nONlCmIiuaU83kuEI4_or8Q9i2HNHnLcb04jzq9uX-t-Nboziy4nS2CjXQWIxGMFJcZ4RVPcVyZuwRiqxiamGpG3T3AKf10w9tw4AbaWxmY3_d8WVLtwkejCgFyF3mdylOknQeuDh1Y7kL2iSk_diS5Pwnve2snlDAJnL6PxjkZ9rUtmCQG_iXt0y38yj8eM-uxEAau-F0Dy2ih9QjqKKDePGDt8g6RN9FcBlKxGtLLvmWzjHX1psGewWhvjiL1Xeh8HV0AtgB44RXL9YSLmF8x89_6BEPM8CSZ2OKGJg",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "https://us-central1-epitech-serverless.cloudfunctions.net/webApi/v1",
+			"type": "string"
+		}
+	]
+}

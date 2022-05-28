@@ -1,7 +1,7 @@
-import { firestore } from "firebase-admin";
+import {firestore} from "firebase-admin";
 
-import * as admin from 'firebase-admin';
-import * as functions from 'firebase-functions';
+import * as admin from "firebase-admin";
+import * as functions from "firebase-functions";
 
 export async function verifyToken(
     request: functions.Request
@@ -16,9 +16,11 @@ export async function verifyToken(
         const payload: admin.auth.DecodedIdToken =
             await admin.auth().verifyIdToken(token);
         if (payload !== null) {
-            (<any>request).user = payload
-            return true
+            (<any>request).user = payload;
+            functions.logger.debug("Payload OK");
+            return true;
         }
+        functions.logger.debug("Payload KO");
         return false;
     } catch (err) {
         return false;
@@ -32,7 +34,7 @@ async function getToken(request: functions.Request):
     }
 
     const token: string =
-        request.headers.authorization.replace(/^Bearer\s/, '');
+        request.headers.authorization.replace(/^Bearer\s/, "");
 
     return token;
 }
@@ -41,12 +43,18 @@ export async function isConnectedMiddleware(
     req: any,
     res: any,
     next: any,
-    db: firestore.Firestore
+    db: firestore.Firestore,
+    checkFirebase = true
 ) {
-    if (await verifyToken(req) && await haveRight(req.user.uuid, db)) {
+    functions.logger.info("Check Connected");
+    if (await verifyToken(req) &&
+        ((checkFirebase && await haveRight(req.user.uuid, db)) ||
+            !checkFirebase)) {
+        functions.logger.info("Connected");
         next();
     } else {
-        res.status(401).send("Need to be auth.");
+        functions.logger.info("Need Auth");
+        res.status(401).json({message: "Need to be auth."});
     }
 }
 

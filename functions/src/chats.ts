@@ -3,6 +3,7 @@ import {FieldValue} from "firebase-admin/firestore";
 import {firestore} from "firebase-admin";
 import {Express} from "express";
 import {logger} from "firebase-functions";
+import {sendMessage} from "./messages";
 
 export function initChatsRoutes(app: Express, db: firestore.Firestore) {
     const baseUrl = "/chats";
@@ -24,6 +25,12 @@ export function initChatsRoutes(app: Express, db: firestore.Firestore) {
                 lastUpdate: FieldValue.serverTimestamp(),
             }).then((_value) => {
                 response.status(201).json({message: "Chat created."});
+
+                try {
+                    sendMessage(db, request.params.chatName, "Chat created.", request.user.uid, true, false);
+                } catch (err: any) {
+                    return;
+                }
             }).catch((err: any) => {
                 logger.error(err);
                 response.status(400).json({message: err.details});
@@ -106,6 +113,12 @@ export function initChatsRoutes(app: Express, db: firestore.Firestore) {
                 user: FieldValue.arrayUnion(request.user.uid),
             }).then((_value: any) => {
                 response.status(200).json({message: "Join chat."});
+
+                try {
+                    sendMessage(db, request.params.chatName, "User " + request.user.uid + " join the chat.", request.user.uid, true, false);
+                } catch (err: any) {
+                    return;
+                }
             }).catch((err: any) => {
                 logger.error(err);
                 response.status(400).json({message: err.details});
@@ -139,6 +152,12 @@ export function initChatsRoutes(app: Express, db: firestore.Firestore) {
                 user: FieldValue.arrayRemove(request.user.uid),
             }).then((_value: any) => {
                 response.status(200).json({message: "Leave chat."});
+
+                try {
+                    sendMessage(db, request.params.chatName, "User " + request.user.uid + " leave the chat.", request.user.uid, true, false);
+                } catch (err: any) {
+                    return;
+                }
             }).catch((err: any) => {
                 logger.error(err);
                 response.status(400).json({message: err.details});

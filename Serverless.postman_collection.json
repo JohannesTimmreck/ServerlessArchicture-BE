@@ -16,7 +16,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"lol\"\r\n}",
+							"raw": "{\r\n    \"name\": \"lo24l\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -53,7 +53,7 @@
 							"variable": [
 								{
 									"key": "chatName",
-									"value": null
+									"value": "lo24l"
 								}
 							]
 						}
@@ -78,7 +78,7 @@
 							"variable": [
 								{
 									"key": "chatName",
-									"value": null
+									"value": "lo24l"
 								}
 							]
 						}
@@ -121,6 +121,70 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "Messages",
+			"item": [
+				{
+					"name": "Send Message",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"message\": \"lol\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/chats/:chatName/messages",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"chats",
+								":chatName",
+								"messages"
+							],
+							"variable": [
+								{
+									"key": "chatName",
+									"value": "lol"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all messages",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/chats/:chatName/messages",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"chats",
+								":chatName",
+								"messages"
+							],
+							"variable": [
+								{
+									"key": "chatName",
+									"value": "lo24l"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	],
 	"auth": {
@@ -128,7 +192,7 @@
 		"bearer": [
 			{
 				"key": "token",
-				"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjZmOGUxY2IxNTY0MTQ2M2M2ZGYwZjMzMzk0YjAzYzkyZmNjODg5YWMiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vZXBpdGVjaC1zZXJ2ZXJsZXNzIiwiYXVkIjoiZXBpdGVjaC1zZXJ2ZXJsZXNzIiwiYXV0aF90aW1lIjoxNjUzNzA3OTQ1LCJ1c2VyX2lkIjoiMlk5REh6QjdEbVJSWFowUVFDdFVCdm5jT1UyMyIsInN1YiI6IjJZOURIekI3RG1SUlhaMFFRQ3RVQnZuY09VMjMiLCJpYXQiOjE2NTM3MDc5NDYsImV4cCI6MTY1MzcxMTU0NiwiZW1haWwiOiJsb2xAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJmaXJlYmFzZSI6eyJpZGVudGl0aWVzIjp7ImVtYWlsIjpbImxvbEBnbWFpbC5jb20iXX0sInNpZ25faW5fcHJvdmlkZXIiOiJwYXNzd29yZCJ9fQ.i7_8lBoxe3s5PlCx6l1k6pFegjTaufwqiUdOPJzXlVmZ-nONlCmIiuaU83kuEI4_or8Q9i2HNHnLcb04jzq9uX-t-Nboziy4nS2CjXQWIxGMFJcZ4RVPcVyZuwRiqxiamGpG3T3AKf10w9tw4AbaWxmY3_d8WVLtwkejCgFyF3mdylOknQeuDh1Y7kL2iSk_diS5Pwnve2snlDAJnL6PxjkZ9rUtmCQG_iXt0y38yj8eM-uxEAau-F0Dy2ih9QjqKKDePGDt8g6RN9FcBlKxGtLLvmWzjHX1psGewWhvjiL1Xeh8HV0AtgB44RXL9YSLmF8x89_6BEPM8CSZ2OKGJg",
+				"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjZmOGUxY2IxNTY0MTQ2M2M2ZGYwZjMzMzk0YjAzYzkyZmNjODg5YWMiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vZXBpdGVjaC1zZXJ2ZXJsZXNzIiwiYXVkIjoiZXBpdGVjaC1zZXJ2ZXJsZXNzIiwiYXV0aF90aW1lIjoxNjUzNzIwMzg1LCJ1c2VyX2lkIjoiMlk5REh6QjdEbVJSWFowUVFDdFVCdm5jT1UyMyIsInN1YiI6IjJZOURIekI3RG1SUlhaMFFRQ3RVQnZuY09VMjMiLCJpYXQiOjE2NTM3MjAzODcsImV4cCI6MTY1MzcyMzk4NywiZW1haWwiOiJsb2xAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJmaXJlYmFzZSI6eyJpZGVudGl0aWVzIjp7ImVtYWlsIjpbImxvbEBnbWFpbC5jb20iXX0sInNpZ25faW5fcHJvdmlkZXIiOiJwYXNzd29yZCJ9fQ.YMUgFZ0njOn2tQjEXaV4GqvAxTNKmTh4znNEMrOKlz1A_1BuPqkuLj_4IRuumW-725mZhXhlpZxGqT1aJSz9OnrxC9aSiA-0UIeydKyUjU3VbQpchnydpf--fiN5CGkD9gVtKreFtzf-3RnYrYJdcz6sj75JC5lWgtZorYfW2pvGg0iANykDv5p31XSewlV4jUIe4Xslh_EElFWhRbFQh8wbMWdIVa7l-mGmzFg31XNcEEaUuB2Lwjxb9o3quUSjohUe7wjSFrH7-MdvqHLXQpfAYCs04Je1JBKhlWaOACTINuUujWKHYbQUBF7L5T6fahqn1IN89amX0xu9OuKsGA",
 				"type": "string"
 			}
 		]

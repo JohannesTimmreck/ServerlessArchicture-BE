@@ -1,9 +1,9 @@
-import {isConnectedMiddleware} from "./helpers";
-import {FieldValue} from "firebase-admin/firestore";
-import {firestore} from "firebase-admin";
-import {Express} from "express";
-import {logger} from "firebase-functions";
-import {sendMessage} from "./messages";
+import { isConnectedMiddleware } from "./helpers";
+import { FieldValue } from "firebase-admin/firestore";
+import { firestore } from "firebase-admin";
+import { Express } from "express";
+import { logger } from "firebase-functions";
+import { sendMessage } from "./messages";
 
 export function initChatsRoutes(app: Express, db: firestore.Firestore) {
     const baseUrl = "/chats";
@@ -13,18 +13,18 @@ export function initChatsRoutes(app: Express, db: firestore.Firestore) {
             isConnectedMiddleware(req, res, next, db, false),
         async (request: any, response: any) => {
             if (!(request.body && request.body.name)) {
-                response.status(400).json({message: "Need a name."});
+                response.status(400).json({ message: "Need a name." });
             }
 
             if ((await db.collection("Chats").doc(request.body.name).get()).exists) {
-                response.status(400).json({message: "This chat already exist."});
+                response.status(400).json({ message: "This chat already exist." });
             }
 
             db.collection("Chats").doc(request.body.name).set({
                 user: [request.user.uid],
                 lastUpdate: FieldValue.serverTimestamp(),
             }).then((_value) => {
-                response.status(201).json({message: "Chat created."});
+                response.status(201).json({ message: "Chat created." });
 
                 try {
                     sendMessage(db, request.params.chatName, "Chat created.", request.user.uid, true, false);
@@ -33,7 +33,7 @@ export function initChatsRoutes(app: Express, db: firestore.Firestore) {
                 }
             }).catch((err: any) => {
                 logger.error(err);
-                response.status(400).json({message: err.details});
+                response.status(400).json({ message: err.details });
             });
         }
     );
@@ -57,7 +57,7 @@ export function initChatsRoutes(app: Express, db: firestore.Firestore) {
                 })
                 .catch((err: any) => {
                     logger.error(err);
-                    response.status(400).json({message: err.details});
+                    response.status(400).json({ message: err.details });
                 });
         }
     );
@@ -82,7 +82,7 @@ export function initChatsRoutes(app: Express, db: firestore.Firestore) {
                 })
                 .catch((err: any) => {
                     logger.error(err);
-                    response.status(400).json({message: err.details});
+                    response.status(400).json({ message: err.details });
                 });
         }
     );
@@ -92,7 +92,7 @@ export function initChatsRoutes(app: Express, db: firestore.Firestore) {
             isConnectedMiddleware(req, res, next, db, false),
         async (request: any, response: any) => {
             if (!(request.params && request.params.chatName)) {
-                response.status(400).json({message: "Need the chat name."});
+                response.status(400).json({ message: "Need the chat name." });
             }
 
             const docRef = db.collection("Chats").doc(request.params.chatName);
@@ -100,28 +100,28 @@ export function initChatsRoutes(app: Express, db: firestore.Firestore) {
             const docDataGet = await docRef.get();
 
             if (!(docDataGet.exists)) {
-                response.status(400).json({message: "This chat don't exist."});
+                response.status(400).json({ message: "This chat don't exist." });
             }
 
             const docData = docDataGet.data();
 
             if (docData && docData.user.find((element: string) => element === request.user.uid)) {
-                response.status(400).json({message: "Already present in this chat."});
+                response.status(400).json({ message: "Already present in this chat." });
             }
 
             docRef.update({
                 user: FieldValue.arrayUnion(request.user.uid),
             }).then((_value: any) => {
-                response.status(200).json({message: "Join chat."});
+                response.status(200).json({ message: "Join chat." });
 
                 try {
-                    sendMessage(db, request.params.chatName, "User " + request.user.uid + " join the chat.", request.user.uid, true, false);
+                    sendMessage(db, request.params.chatName, "User " + request.user.uid + " join the chat.", request.user.uid, true, true);
                 } catch (err: any) {
                     return;
                 }
             }).catch((err: any) => {
                 logger.error(err);
-                response.status(400).json({message: err.details});
+                response.status(400).json({ message: err.details });
             });
         }
     );
@@ -131,7 +131,7 @@ export function initChatsRoutes(app: Express, db: firestore.Firestore) {
             isConnectedMiddleware(req, res, next, db, false),
         async (request: any, response: any) => {
             if (!(request.params && request.params.chatName)) {
-                response.status(400).json({message: "Need the chat name."});
+                response.status(400).json({ message: "Need the chat name." });
             }
 
             const docRef = db.collection("Chats").doc(request.params.chatName);
@@ -139,28 +139,28 @@ export function initChatsRoutes(app: Express, db: firestore.Firestore) {
             const docDataGet = await docRef.get();
 
             if (!(docDataGet.exists)) {
-                response.status(400).json({message: "This chat don't exist."});
+                response.status(400).json({ message: "This chat don't exist." });
             }
 
             const docData = docDataGet.data();
 
             if (docData && !docData.user.find((element: string) => element === request.user.uid)) {
-                response.status(400).json({message: "Not present in this chat."});
+                response.status(400).json({ message: "Not present in this chat." });
             }
 
             docRef.update({
                 user: FieldValue.arrayRemove(request.user.uid),
             }).then((_value: any) => {
-                response.status(200).json({message: "Leave chat."});
+                response.status(200).json({ message: "Leave chat." });
 
                 try {
-                    sendMessage(db, request.params.chatName, "User " + request.user.uid + " leave the chat.", request.user.uid, true, false);
+                    sendMessage(db, request.params.chatName, "User " + request.user.uid + " leave the chat.", request.user.uid, true, true);
                 } catch (err: any) {
                     return;
                 }
             }).catch((err: any) => {
                 logger.error(err);
-                response.status(400).json({message: err.details});
+                response.status(400).json({ message: err.details });
             });
         }
     );

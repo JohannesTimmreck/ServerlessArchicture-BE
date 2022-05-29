@@ -30,11 +30,19 @@ service cloud.firestore {
       allow read: if validUser(request);    
     }
     
-    match /Documents/{roleID} {
+    match /Documents/{documentID} {
       allow read, write: if validUser(request);    
     }
     
-    
+    match /CommentSection/{commentSectionID} {
+      allow read, write: if validUser(request);    
+    }
+
+    match /Chats/{chatID} {
+      allow read, write: if validUser(request);    
+    }
+
+
     // Helper
     function validUser(request) {
       let user = getResource("Users", request.auth.uid);
@@ -50,12 +58,12 @@ service cloud.firestore {
 
     // Admin Access
     function isAdmin(User) {
-      return ("Admin" in User.data.Roles) || ("Admin" in User.data.Groups)
+      return ("Admin" in User.data.Roles)
     }
 
     // Manager Access
     function isManager(User) {
-    	return ("Manager" in User.data.Roles) || ("Manager" in User.data.Groups)
+    	return ("Manager" in User.data.Roles)
     }
     // User Access
 

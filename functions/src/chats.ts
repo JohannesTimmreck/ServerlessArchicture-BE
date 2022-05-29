@@ -14,10 +14,12 @@ export function initChatsRoutes(app: Express, db: firestore.Firestore) {
         async (request: any, response: any) => {
             if (!(request.body && request.body.name)) {
                 response.status(400).json({message: "Need a name."});
+                return;
             }
 
             if ((await db.collection("Chats").doc(request.body.name).get()).exists) {
                 response.status(400).json({message: "This chat already exist."});
+                return;
             }
 
             db.collection("Chats").doc(request.body.name).set({
@@ -93,6 +95,7 @@ export function initChatsRoutes(app: Express, db: firestore.Firestore) {
         async (request: any, response: any) => {
             if (!(request.params && request.params.chatName)) {
                 response.status(400).json({message: "Need the chat name."});
+                return;
             }
 
             const docRef = db.collection("Chats").doc(request.params.chatName);
@@ -101,12 +104,14 @@ export function initChatsRoutes(app: Express, db: firestore.Firestore) {
 
             if (!(docDataGet.exists)) {
                 response.status(400).json({message: "This chat don't exist."});
+                return;
             }
 
             const docData = docDataGet.data();
 
             if (docData && docData.user.find((element: string) => element === request.user.uid)) {
                 response.status(400).json({message: "Already present in this chat."});
+                return;
             }
 
             docRef.update({
@@ -132,6 +137,7 @@ export function initChatsRoutes(app: Express, db: firestore.Firestore) {
         async (request: any, response: any) => {
             if (!(request.params && request.params.chatName)) {
                 response.status(400).json({message: "Need the chat name."});
+                return;
             }
 
             const docRef = db.collection("Chats").doc(request.params.chatName);
@@ -140,12 +146,14 @@ export function initChatsRoutes(app: Express, db: firestore.Firestore) {
 
             if (!(docDataGet.exists)) {
                 response.status(400).json({message: "This chat don't exist."});
+                return;
             }
 
             const docData = docDataGet.data();
 
             if (docData && !docData.user.find((element: string) => element === request.user.uid)) {
                 response.status(400).json({message: "Not present in this chat."});
+                return;
             }
 
             docRef.update({

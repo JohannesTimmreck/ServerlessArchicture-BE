@@ -31,7 +31,7 @@ module.exports = {
         "linebreak-style": ["error", "windows"],
         "@typescript-eslint/no-explicit-any": "off",
         "require-jsdoc": 0,
-        "max-len": ["error", {"code": 150}],
+        "max-len": ["error", {"code": 200}],
         "import/no-unresolved": 0,
     },
 };

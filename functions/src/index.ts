@@ -7,6 +7,7 @@ import {initMessagesRoutes} from "./messages";
 
 admin.initializeApp(functions.config().firebase);
 const db = admin.firestore();
+const storage = admin.storage();
 
 const app = express();
 const main = express();
@@ -17,7 +18,7 @@ main.use(bodyParser.json());
 export const webApiEu = functions.region("europe-west1").https.onRequest(main);
 
 initChatsRoutes(app, db);
-initMessagesRoutes(app, db);
+initMessagesRoutes(app, db, storage);
 
 app.use((req: any, res: any) => {
     res.status(404).json({message: "This route doesn't exist."});

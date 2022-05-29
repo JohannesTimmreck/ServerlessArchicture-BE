@@ -160,6 +160,42 @@
 					"response": []
 				},
 				{
+					"name": "Send file",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/$KE1100-DQLH02RHTTI7/Downloads/bonhomme (1).png"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/chats/:chatName/messages/file",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"chats",
+								":chatName",
+								"messages",
+								"file"
+							],
+							"variable": [
+								{
+									"key": "chatName",
+									"value": "lo24l"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Get all messages",
 					"request": {
 						"method": "GET",
@@ -183,6 +219,37 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Get file",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/chats/:chatName/messages/file/:fileName",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"chats",
+								":chatName",
+								"messages",
+								"file",
+								":fileName"
+							],
+							"variable": [
+								{
+									"key": "chatName",
+									"value": "lol"
+								},
+								{
+									"key": "fileName",
+									"value": "cobra_bar-galley.jpgé"
+								}
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		}
@@ -192,7 +259,7 @@
 		"bearer": [
 			{
 				"key": "token",
-				"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjZmOGUxY2IxNTY0MTQ2M2M2ZGYwZjMzMzk0YjAzYzkyZmNjODg5YWMiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vZXBpdGVjaC1zZXJ2ZXJsZXNzIiwiYXVkIjoiZXBpdGVjaC1zZXJ2ZXJsZXNzIiwiYXV0aF90aW1lIjoxNjUzNzIwMzg1LCJ1c2VyX2lkIjoiMlk5REh6QjdEbVJSWFowUVFDdFVCdm5jT1UyMyIsInN1YiI6IjJZOURIekI3RG1SUlhaMFFRQ3RVQnZuY09VMjMiLCJpYXQiOjE2NTM3MjAzODcsImV4cCI6MTY1MzcyMzk4NywiZW1haWwiOiJsb2xAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJmaXJlYmFzZSI6eyJpZGVudGl0aWVzIjp7ImVtYWlsIjpbImxvbEBnbWFpbC5jb20iXX0sInNpZ25faW5fcHJvdmlkZXIiOiJwYXNzd29yZCJ9fQ.YMUgFZ0njOn2tQjEXaV4GqvAxTNKmTh4znNEMrOKlz1A_1BuPqkuLj_4IRuumW-725mZhXhlpZxGqT1aJSz9OnrxC9aSiA-0UIeydKyUjU3VbQpchnydpf--fiN5CGkD9gVtKreFtzf-3RnYrYJdcz6sj75JC5lWgtZorYfW2pvGg0iANykDv5p31XSewlV4jUIe4Xslh_EElFWhRbFQh8wbMWdIVa7l-mGmzFg31XNcEEaUuB2Lwjxb9o3quUSjohUe7wjSFrH7-MdvqHLXQpfAYCs04Je1JBKhlWaOACTINuUujWKHYbQUBF7L5T6fahqn1IN89amX0xu9OuKsGA",
+				"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjZmOGUxY2IxNTY0MTQ2M2M2ZGYwZjMzMzk0YjAzYzkyZmNjODg5YWMiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vZXBpdGVjaC1zZXJ2ZXJsZXNzIiwiYXVkIjoiZXBpdGVjaC1zZXJ2ZXJsZXNzIiwiYXV0aF90aW1lIjoxNjUzODEwMTM4LCJ1c2VyX2lkIjoibmdxOUJ3UmJDa1dIY2liS0ZKbWdmQTI1blNvMSIsInN1YiI6Im5ncTlCd1JiQ2tXSGNpYktGSm1nZkEyNW5TbzEiLCJpYXQiOjE2NTM4MTAxMzksImV4cCI6MTY1MzgxMzczOSwiZW1haWwiOiJhZG1pbkBweXdvbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnsiZW1haWwiOlsiYWRtaW5AcHl3b2wuY29tIl19LCJzaWduX2luX3Byb3ZpZGVyIjoicGFzc3dvcmQifX0.MuQm55TpOs_0EIUT-XAdd6wVVcbo6dNMg3WSYiFobyPXcu_nYH0iyHXvAAn077XFyYaisbfeO-IV6CHYJGuSay5naOAKv482--xdfsh5QEqmLzGT4_pgj5JRFlQhzQoY_XmtiHQkndtcVugDEkQzb_OICtSgZDyf2qHpiBIEwnLEiZ9NwOlif3dXiBT9j4JAqQEQFiva5uVfkg0LLRPSws7Ytybsphp7DWse3x7aMbrlOgzbLggDLz8zGKk5tu4PmNDIy7PqHFEE4bvuigSkoGT3eoPevFuVigMoLpxcvQUeZN7EMOJeEk564mfaLh9QBIAnGm36LV9MgyWGIzxl4g",
 				"type": "string"
 			}
 		]

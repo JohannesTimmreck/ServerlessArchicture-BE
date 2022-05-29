@@ -287,7 +287,7 @@
 	"variable": [
 		{
 			"key": "baseUrl",
-			"value": "https://europe-west1-epitech-serverless.cloudfunctions.net/webApiEu",
+			"value": "https://europe-west1-epitech-serverless.cloudfunctions.net/webApiEu/v1",
 			"type": "string"
 		}
 	]

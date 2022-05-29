@@ -77,7 +77,7 @@
 							"variable": [
 								{
 									"key": "chatName",
-									"value": "lo24l"
+									"value": "lo224l"
 								}
 							]
 						}
@@ -276,6 +276,32 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "Add device",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"token\": \"\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/device",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"device"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"auth": {

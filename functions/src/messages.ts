@@ -3,8 +3,9 @@ import {FieldValue} from "firebase-admin/firestore";
 import {firestore} from "firebase-admin";
 import {Express} from "express";
 import {logger} from "firebase-functions";
+import {Server} from "socket.io";
 
-async function checkChatRoomExist(db: firestore.Firestore, name: string) {
+export async function checkChatRoomExist(db: firestore.Firestore, name: string) {
     if ((await db.collection("Chats").doc(name).get()).exists) {
         return true;
     }
@@ -39,6 +40,7 @@ export async function sendMessage(
     chatName: string,
     message: string,
     uid: string,
+    io: Server,
     systemMessage = false,
     updateLastUpdate = true
 ) {
@@ -48,6 +50,12 @@ export async function sendMessage(
         createdAt: FieldValue.serverTimestamp(),
         systemMessage: systemMessage,
     });
+    io.in(chatName).emit("message", {
+        message: message,
+        user: uid,
+        createdAt: new Date(),
+        systemMessage: systemMessage,
+    });
     if (updateLastUpdate) {
         await db.collection("Chats").doc(chatName).update({
             lastUpdate: FieldValue.serverTimestamp(),
@@ -55,7 +63,7 @@ export async function sendMessage(
     }
 }
 
-export function initMessagesRoutes(app: Express, db: firestore.Firestore) {
+export function initMessagesRoutes(app: Express, db: firestore.Firestore, io: Server) {
     const baseUrl = "/chats/:chatName/messages";
 
     app.get(baseUrl,
@@ -98,7 +106,7 @@ export function initMessagesRoutes(app: Express, db: firestore.Firestore) {
                 response.status(400).json({message: "Need a message."});
             }
 
-            sendMessage(db, request.params.chatName, request.body.message, request.user.uid)
+            sendMessage(db, request.params.chatName, request.body.message, request.user.uid, io)
                 .then((_value) => {
                     response.status(201).json({message: "Message send."});
                 }).catch((err: any) => {

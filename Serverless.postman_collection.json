@@ -220,7 +220,7 @@
 	"variable": [
 		{
 			"key": "baseUrl",
-			"value": "https://us-central1-epitech-serverless.cloudfunctions.net/webApi/v1",
+			"value": "https://europe-west1-epitech-serverless.cloudfunctions.net/webApiEu",
 			"type": "string"
 		}
 	]

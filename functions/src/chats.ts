@@ -3,39 +3,10 @@ import {FieldValue} from "firebase-admin/firestore";
 import {firestore} from "firebase-admin";
 import {Express} from "express";
 import {logger} from "firebase-functions";
-import {checkChatRoomExist, sendMessage} from "./messages";
-import {Server, Socket} from "socket.io";
+import {sendMessage} from "./messages";
 
-function chatWebSocket(io: Server, db: firestore.Firestore) {
-    io.on("connection", async (socket: Socket) => {
-        if (socket.data && socket.data.user && socket.data.user.uid) {
-            socket.join(socket.data.user.uid);
-        }
-
-        socket.on("listenChat", async (roomName: string, callback) => {
-            if (await checkChatRoomExist(db, roomName)) {
-                socket.join(roomName);
-                callback("Listen chat.");
-            } else {
-                callback("This chat don't exist.");
-            }
-        });
-
-        socket.on("stopListenChat", async (roomName: string, callback) => {
-            if (await checkChatRoomExist(db, roomName)) {
-                socket.leave(roomName);
-                callback("Stop listen chat.");
-            } else {
-                callback("This chat don't exist.");
-            }
-        });
-    });
-}
-
-export function initChatsRoutes(app: Express, db: firestore.Firestore, io: Server) {
+export function initChatsRoutes(app: Express, db: firestore.Firestore) {
     const baseUrl = "/chats";
-
-    chatWebSocket(io, db);
 
     app.post(baseUrl,
         (req: any, res: any, next: any) =>
@@ -55,10 +26,8 @@ export function initChatsRoutes(app: Express, db: firestore.Firestore, io: Serve
             }).then((_value) => {
                 response.status(201).json({message: "Chat created."});
 
-                io.in(request.user.uid).emit("joinChat", request.params.chatName);
-
                 try {
-                    sendMessage(db, request.params.chatName, "Chat created.", request.user.uid, io, true, false);
+                    sendMessage(db, request.params.chatName, "Chat created.", request.user.uid, true, false);
                 } catch (err: any) {
                     return;
                 }
@@ -145,10 +114,8 @@ export function initChatsRoutes(app: Express, db: firestore.Firestore, io: Serve
             }).then((_value: any) => {
                 response.status(200).json({message: "Join chat."});
 
-                io.in(request.user.uid).emit("joinChat", request.params.chatName);
-
                 try {
-                    sendMessage(db, request.params.chatName, "User " + request.user.uid + " join the chat.", request.user.uid, io, true, true);
+                    sendMessage(db, request.params.chatName, "User " + request.user.uid + " join the chat.", request.user.uid, true, true);
                 } catch (err: any) {
                     return;
                 }
@@ -186,11 +153,8 @@ export function initChatsRoutes(app: Express, db: firestore.Firestore, io: Serve
             }).then((_value: any) => {
                 response.status(200).json({message: "Leave chat."});
 
-                io.in(request.user.uid).socketsLeave(request.params.chatName);
-                io.in(request.user.uid).emit("leaveChat", request.params.chatName);
-
                 try {
-                    sendMessage(db, request.params.chatName, "User " + request.user.uid + " leave the chat.", request.user.uid, io, true, true);
+                    sendMessage(db, request.params.chatName, "User " + request.user.uid + " leave the chat.", request.user.uid, true, true);
                 } catch (err: any) {
                     return;
                 }

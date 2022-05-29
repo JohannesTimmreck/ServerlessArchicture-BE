@@ -4,70 +4,82 @@ service cloud.firestore {
     // complete access to admins
     match /{document=**} {
       allow read, write: if validUser(request)
-      	&& isAdmin(getUser(request.auth.uid));
+      	&& isAdmin(getResource("User", request.auth.uid));
     }
     // complete read access to Managers
     match /{document=**} {
       allow read: if validUser(request)
-      	&& isManager(getUser(request.auth.uid));
+      	&& isManager(getResource("User", request.auth.uid));
     }
     
   	match /Users/{userID} {
       // allow rights to yourself
-      allow read, write: if validUser(request) && request.auth.uid == userID;
-      // allow update: if validUser(request) && (assignGroup(request) || assignRole(request));
+      allow get, update, delete: if validUser(request) && request.auth.uid == userID;
     }
     
     match /Groups/{groupID} {
-      allow read, write: if validUser(request) && groupID in getResource("Users", request.auth.uid);
+      allow create: if validUser(request);
+      allow get: if validUser(request) && groupMember(getResource("Users", request.auth.uid).Groups, groupID);
+      allow update, delete: if validUser(request) && groupMemberAdv(getResource("Users", request.auth.uid).Groups, groupID);
     }
     
     match /Roles/{roleID} {
-      allow read: if validUser(request);
+      allow get: if validUser(request);
     }
     
     match /Rights/{rightsID} {
-      allow read: if validUser(request);    
+      allow get: if validUser(request);
     }
     
-    match /Documents/{roleID} {
-      allow read, write: if validUser(request);    
+    match /Documents/{documentID} {
+      allow create: if validUser(request);
+      // Access to your own documents
+      allow get, update, delete: if validUser(request) && getResource("Documents", documentID).Author == request.auth.uid;
+      allow get: if getResource("Documents", documentID).Visibility == "public";
     }
     
-    
+    match /CommentSection/{commentSectionID} {
+      allow get, write: if validUser(request);    
+    }
+
+    match /Chats/{chatID} {
+      allow create: if validUser(request);
+      allow get: if validUser(request) && request.auth.uid in getResource("Chats", chatID).user;
+      allow update, delete: if validUser(request) && request.auth.uid in getResource("Chats", chatID).owner;
+      match /messages/{messageID} {
+        allow update: if validUser(request) && request.auth.uid in getResource("Chats", chatID).user;
+      }
+    }
+
     // Helper
     function validUser(request) {
-      let user = getResource("Users", request.auth.uid);
-      return request.auth != null && exists("Users", request.auth.uid)
-        && ('User' in user.Groups || 'User' in user.Roles) 
+      let usr = getResource("Users", request.auth.uid);
+      return request.auth != null && resourceExists("Users", request.auth.uid)
+        && 'User' in usr.Roles;
     }
     function getResource(Collection, ID) {
-      return get(/databases/$(database)/documents/$(Collection)/$(ID)).data
+      return get(/databases/$(database)/documents/$(Collection)/$(ID)).data;
     }
     function resourceExists(Collection, ID) {
-      return exists(/databases/$(database)/documents/$(Collection)/$(ID))
+      return exists(/databases/$(database)/documents/$(Collection)/$(ID));
+    }
+
+    function groupMember(usr, groupID) {
+      return (groupID in usr.Groups && "$(groupID)_User" in usr.Roles) || groupMemberAdv(usr, groupID);
+    }
+
+    function groupMemberAdv(usr, groupID) {
+      return groupID in usr.Groups && ("$(groupID)_Admin" in usr.Roles || "$(groupID)_Manager" in usr.Roles);
     }
 
     // Admin Access
     function isAdmin(User) {
-      return ("Admin" in User.data.Roles) || ("Admin" in User.data.Groups)
+      return ("Admin" in User.Roles)
     }
 
     // Manager Access
     function isManager(User) {
-    	return ("Manager" in User.data.Roles) || ("Manager" in User.data.Groups)
-    }
-    // User Access
-
-    function assignGroup(request) {
-      let usr = getResource("Users", request.auth.uid);
-      let payload = request.resource.data.Payload;
-      return (payload.Type == "Group" && payload.Id in usr.Groups)
-    }
-    function assignRole(request) {
-      let usr = getResource("Users", request.auth.uid);
-      let payload = request.resource.data.Payload;
-      return (payload.Type == "Role" && payload.Id in usr.Groups)
+    	return ("Manager" in User.Roles)
     }
   }
 }

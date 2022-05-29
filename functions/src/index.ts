@@ -24,3 +24,12 @@ app.use((req: any, res: any) => {
     res.status(404).json({message: "This route doesn't exist."});
     res.statusMessage = "This route doesn't exist.";
 });
+
+export const createUser = functions.auth.user().onCreate((user) => {
+    db.collection("Users").doc(user.uid).set({
+        Documents: [],
+        Groups: [],
+        Roles: ['User'],
+        Rights: [],
+    })
+});

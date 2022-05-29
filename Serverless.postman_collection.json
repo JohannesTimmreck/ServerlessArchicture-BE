@@ -61,6 +61,30 @@
 					"response": []
 				},
 				{
+					"name": "Delete chat",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/chats/:chatName",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"chats",
+								":chatName"
+							],
+							"variable": [
+								{
+									"key": "chatName",
+									"value": "lo24l"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Leave chat",
 					"request": {
 						"method": "PUT",
@@ -259,7 +283,7 @@
 		"bearer": [
 			{
 				"key": "token",
-				"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjZmOGUxY2IxNTY0MTQ2M2M2ZGYwZjMzMzk0YjAzYzkyZmNjODg5YWMiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vZXBpdGVjaC1zZXJ2ZXJsZXNzIiwiYXVkIjoiZXBpdGVjaC1zZXJ2ZXJsZXNzIiwiYXV0aF90aW1lIjoxNjUzODEwMTM4LCJ1c2VyX2lkIjoibmdxOUJ3UmJDa1dIY2liS0ZKbWdmQTI1blNvMSIsInN1YiI6Im5ncTlCd1JiQ2tXSGNpYktGSm1nZkEyNW5TbzEiLCJpYXQiOjE2NTM4MTAxMzksImV4cCI6MTY1MzgxMzczOSwiZW1haWwiOiJhZG1pbkBweXdvbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnsiZW1haWwiOlsiYWRtaW5AcHl3b2wuY29tIl19LCJzaWduX2luX3Byb3ZpZGVyIjoicGFzc3dvcmQifX0.MuQm55TpOs_0EIUT-XAdd6wVVcbo6dNMg3WSYiFobyPXcu_nYH0iyHXvAAn077XFyYaisbfeO-IV6CHYJGuSay5naOAKv482--xdfsh5QEqmLzGT4_pgj5JRFlQhzQoY_XmtiHQkndtcVugDEkQzb_OICtSgZDyf2qHpiBIEwnLEiZ9NwOlif3dXiBT9j4JAqQEQFiva5uVfkg0LLRPSws7Ytybsphp7DWse3x7aMbrlOgzbLggDLz8zGKk5tu4PmNDIy7PqHFEE4bvuigSkoGT3eoPevFuVigMoLpxcvQUeZN7EMOJeEk564mfaLh9QBIAnGm36LV9MgyWGIzxl4g",
+				"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjZmOGUxY2IxNTY0MTQ2M2M2ZGYwZjMzMzk0YjAzYzkyZmNjODg5YWMiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vZXBpdGVjaC1zZXJ2ZXJsZXNzIiwiYXVkIjoiZXBpdGVjaC1zZXJ2ZXJsZXNzIiwiYXV0aF90aW1lIjoxNjUzODUwNjQzLCJ1c2VyX2lkIjoiUDZEWUZBMU1OZmhSaU5OdnBYb0ZzSTJITGRyMiIsInN1YiI6IlA2RFlGQTFNTmZoUmlOTnZwWG9Gc0kySExkcjIiLCJpYXQiOjE2NTM4NTA2NDQsImV4cCI6MTY1Mzg1NDI0NCwiZW1haWwiOiJkYWJAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJmaXJlYmFzZSI6eyJpZGVudGl0aWVzIjp7ImVtYWlsIjpbImRhYkBnbWFpbC5jb20iXX0sInNpZ25faW5fcHJvdmlkZXIiOiJwYXNzd29yZCJ9fQ.hOBSLSh6zeb1fNj95T_INz04HL6S1vNU6kw4aFJCzaKk6elTFDekPjpR_of5MbXMfv1x-T-9SNCy5hU5OwSTPonn0BCKKT-h4ot7IX6v-YvMxsArJzsmXibc-3GZrjW3dl9Yyw1O_64tdNWrKfUYyq7QFva5QDDFo_Ks2HuftMIrcEQ6Glo3A1ACpiOexzRyO-knaQ99wp4gu1S38s5SZNIN3cZM_vfSKzlhx40Vq3sjsZGYq4rQ46KTKXs80AgVTLRaUPzln_pA2LFDmnw49bJwXRISeKAISFTyS307QO7m8obf5iMyjU8HmHXWfQY99hDQAcKXuIy-y_74IygPGA",
 				"type": "string"
 			}
 		]

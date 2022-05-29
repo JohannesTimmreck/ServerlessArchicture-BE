@@ -17,7 +17,7 @@ export async function checkChatRoomExist(db: firestore.Firestore, name: string) 
     return false;
 }
 
-async function checkChatRoomExistMiddleware(req: any, res: any, next: any, db: firestore.Firestore) {
+export async function checkChatRoomExistMiddleware(req: any, res: any, next: any, db: firestore.Firestore) {
     if (!(req.params && req.params.chatName)) {
         req.status(400).json({message: "Need the chat name."});
     }
@@ -128,6 +128,10 @@ export function initMessagesRoutes(app: Express, db: firestore.Firestore, storag
     (req: any, res: any, next: any) =>
         checkUserIsInChatMiddleware(req, res, next, db),
     (req: any, res: any) => {
+        if (!req.is("multipart/form-data")) {
+            res.status(400).json({message: "This request is not a multipart/form-data."});
+        }
+
         const busboy = busboyC({
             headers: req.headers, limits: {
                 fields: 0,

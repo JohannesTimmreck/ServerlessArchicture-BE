@@ -3,9 +3,10 @@ import {FieldValue} from "firebase-admin/firestore";
 import {firestore} from "firebase-admin";
 import {Express} from "express";
 import {logger} from "firebase-functions";
-import {sendMessage} from "./messages";
+import {checkChatRoomExistMiddleware, sendMessage} from "./messages";
+import {Storage} from "firebase-admin/storage";
 
-export function initChatsRoutes(app: Express, db: firestore.Firestore) {
+export function initChatsRoutes(app: Express, db: firestore.Firestore, storage: Storage) {
     const baseUrl = "/chats";
 
     app.post(baseUrl,
@@ -25,6 +26,7 @@ export function initChatsRoutes(app: Express, db: firestore.Firestore) {
             db.collection("Chats").doc(request.body.name).set({
                 user: [request.user.uid],
                 lastUpdate: FieldValue.serverTimestamp(),
+                creator: request.user.uid,
             }).then((_value) => {
                 response.status(201).json({message: "Chat created."});
 
@@ -166,6 +168,33 @@ export function initChatsRoutes(app: Express, db: firestore.Firestore) {
                 } catch (err: any) {
                     return;
                 }
+            }).catch((err: any) => {
+                logger.error(err);
+                response.status(400).json({message: err.details});
+            });
+        }
+    );
+
+    app.delete(baseUrl + "/:chatName",
+        (req: any, res: any, next: any) =>
+            isConnectedMiddleware(req, res, next, db, false),
+        (req: any, res: any, next: any) =>
+            checkChatRoomExistMiddleware(req, res, next, db),
+        async (request: any, response: any) => {
+            const docRef = db.collection("Chats").doc(request.params.chatName);
+
+            const docDataGet = await docRef.get();
+
+            const docData = docDataGet.data();
+
+            if (docData && docData.creator !== request.user.uid) {
+                response.status(400).json({message: "You are not the creator of this chat."});
+                return;
+            }
+
+            docRef.delete().then(async (_value: any) => {
+                await storage.bucket().deleteFiles({prefix: request.params.chatName});
+                response.status(200).json({message: "Delete chat."});
             }).catch((err: any) => {
                 logger.error(err);
                 response.status(400).json({message: err.details});

@@ -6,6 +6,7 @@ import {initChatsRoutes} from "./chats";
 import {initMessagesRoutes} from "./messages";
 import * as cors from "cors";
 import {initDeviceRoutes} from "./device";
+import {initGroupsRoutes} from "./groups";
 import {FieldValue} from "firebase-admin/firestore";
 
 admin.initializeApp(functions.config().firebase);
@@ -27,6 +28,7 @@ export const webApiEu = functions.region("europe-west1").https.onRequest(main);
 
 initChatsRoutes(app, db, storage);
 initMessagesRoutes(app, db, storage);
+initGroupsRoutes(app, db);
 
 initDeviceRoutes(app, db);
 

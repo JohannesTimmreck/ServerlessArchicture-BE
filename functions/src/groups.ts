@@ -10,9 +10,11 @@ export function initGroupsRoutes(app: Express, db: firestore.Firestore) {
     // create new group
     app.post(baseUrl,
         (req: any, res: any, next: any) =>
-            isConnectedMiddleware(req, res, next, db),
+            isConnectedMiddleware(req, res, next, db, false),
         async (request: any, response: any) => {
-            const userRef = db.collection("Users").doc(request.auth.uid);
+            logger.info("Start Creating Group");
+            logger.info(request);
+            const userRef = db.collection("Users").doc(request.user.uid);
             const userDataGet = await userRef.get();
 
             if (!(userDataGet.exists)) {
@@ -28,6 +30,7 @@ export function initGroupsRoutes(app: Express, db: firestore.Firestore) {
                 response.status(400).json({message: "This group already exist."});
                 return;
             }
+            logger.info("Creating Roles");
             db.collection("Roles").doc(request.body.name+"_User").set({
                 Rights: ["read_groups"],
             }).catch((err: any) => {
@@ -49,6 +52,7 @@ export function initGroupsRoutes(app: Express, db: firestore.Firestore) {
                 response.status(400).json({message: err.details});
                 return;
             });
+            logger.info("Creating Group");
             db.collection("Groups").doc(request.body.name).set({
                 Roles: [request.body.name+"_User", request.body.name+"Admin", request.body.name+"_Manager"],
                 lastUpdate: FieldValue.serverTimestamp(),
@@ -57,7 +61,7 @@ export function initGroupsRoutes(app: Express, db: firestore.Firestore) {
                 response.status(400).json({message: err.details});
                 return;
             });
-
+            logger.info("Updating User");
             userRef.update({
                 Groups: FieldValue.arrayUnion(request.body.name),
                 Roles: FieldValue.arrayUnion(request.body.name+"_Manager"),
@@ -75,7 +79,7 @@ export function initGroupsRoutes(app: Express, db: firestore.Firestore) {
         (req: any, res: any, next: any) =>
             isConnectedMiddleware(req, res, next, db, false),
         async (request: any, response: any) => {
-            db.collection("Users").doc(request.auth.uid)
+            db.collection("Users").doc(request.user.uid)
                 .get()
                 .then((value) => {
                     const responseValue: any[] = value.get("Groups");
@@ -94,6 +98,7 @@ export function initGroupsRoutes(app: Express, db: firestore.Firestore) {
         (req: any, res: any, next: any) =>
             isConnectedMiddleware(req, res, next, db, false),
         async (request: any, response: any) => {
+            logger.info("Start Adding to Group Process");
             if (!(request.params && request.params.groupName)) {
                 response.status(400).json({message: "Need the groupname."});
                 return;
@@ -103,7 +108,7 @@ export function initGroupsRoutes(app: Express, db: firestore.Firestore) {
                 return;
             }
             // user validation
-            const userRef = db.collection("Users").doc(request.auth.uid);
+            const userRef = db.collection("Users").doc(request.user.uid);
             const userDataGet = await userRef.get();
 
             if (!(userDataGet.exists)) {
@@ -150,7 +155,7 @@ export function initGroupsRoutes(app: Express, db: firestore.Firestore) {
                 response.status(400).json({message: "Not allowed to add user to this group."});
                 return;
             }
-
+            logger.info("Finished Validations. Adding to group");
             targetUserRef.update({
                 Groups: FieldValue.arrayUnion(request.params.groupName),
                 Roles: FieldValue.arrayUnion(request.params.groupName+"_User"),
@@ -167,6 +172,7 @@ export function initGroupsRoutes(app: Express, db: firestore.Firestore) {
         (req: any, res: any, next: any) =>
             isConnectedMiddleware(req, res, next, db, false),
         async (request: any, response: any) => {
+            logger.info("Start Adding to Group Admin Process");
             if (!(request.params && request.params.groupName)) {
                 response.status(400).json({message: "Need the groupname."});
                 return;
@@ -176,7 +182,7 @@ export function initGroupsRoutes(app: Express, db: firestore.Firestore) {
                 return;
             }
             // user validation
-            const userRef = db.collection("Users").doc(request.auth.uid);
+            const userRef = db.collection("Users").doc(request.user.uid);
             const userDataGet = await userRef.get();
 
             if (!(userDataGet.exists)) {
@@ -223,7 +229,7 @@ export function initGroupsRoutes(app: Express, db: firestore.Firestore) {
                 response.status(400).json({message: "Not allowed to add user to this group."});
                 return;
             }
-
+            logger.info("Finished Validations. Adding to group admin");
             targetUserRef.update({
                 Groups: FieldValue.arrayUnion(request.params.groupName),
                 Roles: FieldValue.arrayUnion(request.params.groupName+"_Admin"),
@@ -240,6 +246,7 @@ export function initGroupsRoutes(app: Express, db: firestore.Firestore) {
         (req: any, res: any, next: any) =>
             isConnectedMiddleware(req, res, next, db, false),
         async (request: any, response: any) => {
+            logger.info("Start adding to group managers.");
             if (!(request.params && request.params.groupName)) {
                 response.status(400).json({message: "Need the groupname."});
                 return;
@@ -249,7 +256,7 @@ export function initGroupsRoutes(app: Express, db: firestore.Firestore) {
                 return;
             }
             // user validation
-            const userRef = db.collection("Users").doc(request.auth.uid);
+            const userRef = db.collection("Users").doc(request.user.uid);
             const userDataGet = await userRef.get();
 
             if (!(userDataGet.exists)) {
@@ -296,7 +303,7 @@ export function initGroupsRoutes(app: Express, db: firestore.Firestore) {
                 response.status(400).json({message: "Not allowed to add user to this group."});
                 return;
             }
-
+            logger.info("Finished Validations. Adding to group managers");
             targetUserRef.update({
                 Groups: FieldValue.arrayUnion(request.params.groupName),
                 Roles: FieldValue.arrayUnion(request.params.groupName+"_Manager"),

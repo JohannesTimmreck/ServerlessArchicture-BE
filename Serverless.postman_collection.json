@@ -1,9 +1,8 @@
 {
 	"info": {
-		"_postman_id": "5ae90f4f-34f9-41fd-a811-066ea206dda6",
+		"_postman_id": "8d0aab1b-cc08-44ab-9257-51f0712515ca",
 		"name": "Serverless",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "14141768"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
@@ -54,30 +53,6 @@
 								{
 									"key": "chatName",
 									"value": "lo24l"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Delete chat",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "{{baseUrl}}/chats/:chatName",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"chats",
-								":chatName"
-							],
-							"variable": [
-								{
-									"key": "chatName",
-									"value": "lo224l"
 								}
 							]
 						}
@@ -278,30 +253,157 @@
 			]
 		},
 		{
-			"name": "Add device",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"token\": \"\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
+			"name": "Groups",
+			"item": [
+				{
+					"name": "Create Group",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Group1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/groups",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"groups"
+							]
 						}
-					}
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "{{baseUrl}}/device",
-					"host": [
-						"{{baseUrl}}"
-					],
-					"path": [
-						"device"
-					]
+				{
+					"name": "Get Own Groups",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/groups/mine",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"groups",
+								"mine"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add To Group",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \" lol2@gmail.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/groups/add/:groupName",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"groups",
+								"add",
+								":groupName"
+							],
+							"variable": [
+								{
+									"key": "groupName",
+									"value": "Group1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add To Group Admin",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \" lol2@gmail.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/groups/add/:groupName/admin",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"groups",
+								"add",
+								":groupName",
+								"admin"
+							],
+							"variable": [
+								{
+									"key": "groupName",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add To Group Manager",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \" lol2@gmail.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/groups/add/:groupName/manager",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"groups",
+								"add",
+								":groupName",
+								"manager"
+							],
+							"variable": [
+								{
+									"key": "groupName",
+									"value": "Group1"
+								}
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		}
 	],
 	"auth": {
@@ -309,7 +411,7 @@
 		"bearer": [
 			{
 				"key": "token",
-				"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjZmOGUxY2IxNTY0MTQ2M2M2ZGYwZjMzMzk0YjAzYzkyZmNjODg5YWMiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vZXBpdGVjaC1zZXJ2ZXJsZXNzIiwiYXVkIjoiZXBpdGVjaC1zZXJ2ZXJsZXNzIiwiYXV0aF90aW1lIjoxNjUzODUwNjQzLCJ1c2VyX2lkIjoiUDZEWUZBMU1OZmhSaU5OdnBYb0ZzSTJITGRyMiIsInN1YiI6IlA2RFlGQTFNTmZoUmlOTnZwWG9Gc0kySExkcjIiLCJpYXQiOjE2NTM4NTA2NDQsImV4cCI6MTY1Mzg1NDI0NCwiZW1haWwiOiJkYWJAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJmaXJlYmFzZSI6eyJpZGVudGl0aWVzIjp7ImVtYWlsIjpbImRhYkBnbWFpbC5jb20iXX0sInNpZ25faW5fcHJvdmlkZXIiOiJwYXNzd29yZCJ9fQ.hOBSLSh6zeb1fNj95T_INz04HL6S1vNU6kw4aFJCzaKk6elTFDekPjpR_of5MbXMfv1x-T-9SNCy5hU5OwSTPonn0BCKKT-h4ot7IX6v-YvMxsArJzsmXibc-3GZrjW3dl9Yyw1O_64tdNWrKfUYyq7QFva5QDDFo_Ks2HuftMIrcEQ6Glo3A1ACpiOexzRyO-knaQ99wp4gu1S38s5SZNIN3cZM_vfSKzlhx40Vq3sjsZGYq4rQ46KTKXs80AgVTLRaUPzln_pA2LFDmnw49bJwXRISeKAISFTyS307QO7m8obf5iMyjU8HmHXWfQY99hDQAcKXuIy-y_74IygPGA",
+				"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImY0ZTc2NDk3ZGE3Y2ZhOWNjMDkwZDcwZTIyNDQ2YTc0YjVjNTBhYTkiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vZXBpdGVjaC1zZXJ2ZXJsZXNzIiwiYXVkIjoiZXBpdGVjaC1zZXJ2ZXJsZXNzIiwiYXV0aF90aW1lIjoxNjUzOTA0NDM3LCJ1c2VyX2lkIjoiNTluUEVWeWtpeFZKZ2x1bWU3b2ExRk1JZW50MiIsInN1YiI6IjU5blBFVnlraXhWSmdsdW1lN29hMUZNSWVudDIiLCJpYXQiOjE2NTM5MDQ0MzcsImV4cCI6MTY1MzkwODAzNywiZW1haWwiOiJqb2hhbm5lcy50aW1tcmVja0BnbXguZGUiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnsiZW1haWwiOlsiam9oYW5uZXMudGltbXJlY2tAZ214LmRlIl19LCJzaWduX2luX3Byb3ZpZGVyIjoicGFzc3dvcmQifX0.IoUBg5q1mu8iPulhV5o-gipFOukw2XsnymCCfEjiGqY8HfKFsyiuqlMxDLBdjofdNNZZ60FWzGXdttF_DdPzIaZr_yAsRyKBG6RFw6O9hgOmdgv0_TGm_cCCCymi8MmLehz74UriczA19WknL6e6_4JmQhQaWZbfSCBIH7BAc7wvQfED-QzUzuAanVFxoF9p83ALWLE12h1G9nOu3jBmm5RcuRpajpbGK73kMLZ4e396nx66bRdagy3Wn_oZx-b1lA7iFXLb28ZkinHJ5CaIaD72XxQ-byeQRpYgAHP9UfWJixndNPVMd0-tPnijABKpvGmcAuboctsbXVKM0ajA5w",
 				"type": "string"
 			}
 		]
@@ -337,8 +439,7 @@
 	"variable": [
 		{
 			"key": "baseUrl",
-			"value": "https://europe-west1-epitech-serverless.cloudfunctions.net/webApiEu/v1",
-			"type": "string"
+			"value": "https://europe-west1-epitech-serverless.cloudfunctions.net/webApiEu"
 		}
 	]
 }

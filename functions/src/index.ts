@@ -96,6 +96,7 @@ export const createUser = functions.region("europe-west1").auth.user().onCreate(
         Roles: ["User"],
         Rights: [],
         Devices: [],
+        Email: user.email,
     });
 
     db.collection("Chats").doc("files").update({

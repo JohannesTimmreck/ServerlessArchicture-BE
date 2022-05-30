@@ -33,7 +33,7 @@ export function initCommentsRoutes(app: Express, db: firestore.Firestore) {
                 email: request.user.email,
                 createdAt: FieldValue.serverTimestamp(),
             }).then((_value) => {
-                response.status(201).json({message: "Comment added."}))
+                response.status(201).json({message: "Comment added."});})
             .catch((err: any) => {
                 logger.error(err);
                 if (err.details) {

@@ -54,11 +54,22 @@ export function initCommentsRoutes(app: Express, db: firestore.Firestore) {
                 response.status(400).json({message: "Document or CommentSection doesn't exist."});
                 return;
             }
-            db.collection("CommentSection").doc(request.params.document)
+            db.collection("CommentSection").doc(request.params.document).collection("Comments")
+                .orderBy("createdAt", "desc")
                 .get()
-                .then((value) => {
-                    const responseValue: any[] = value.get("Comments");
+                .then((value: firestore.QuerySnapshot<firestore.DocumentData>) => {
+                    const responseValue: any[] = [];
+
+                    value.forEach((doc) => {
+                        const toReturn = doc.data();
+                        toReturn.id = doc.id;
+                        responseValue.push(toReturn);
+                    });
                     response.status(200).json(responseValue);
+                })
+                .catch((err: any) => {
+                    logger.error(err);
+                    response.status(400).json({message: err.details});
                 });
 
         })

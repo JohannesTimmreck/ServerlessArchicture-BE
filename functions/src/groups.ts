@@ -118,11 +118,14 @@ export function initGroupsRoutes(app: Express, db: firestore.Firestore) {
             const userData = userDataGet.data();
             // target user validation
             let targetUser:any = null;
+
+            logger.info(request.body);
             db.collection("Users")
-                .where("email", "==", request.body.email)
+                .where("Email", "==", request.body.email)
                 .get()
                 .then((value: firestore.QuerySnapshot<firestore.DocumentData>) => {
-                    if (value.empty) {
+                    logger.info(value.docs);
+                    if (value.size != 1) {
                         response.status(400).json({message: "This target user doesn't exist."});
                         return;
                     }
@@ -132,7 +135,7 @@ export function initGroupsRoutes(app: Express, db: firestore.Firestore) {
             if (targetUser === null) {
                 return;
             }
-            const targetUserRef = db.collection("Users").doc(targetUser.uid);
+            const targetUserRef = db.collection("Users").doc(targetUser);
             const targetUserDataGet = await targetUserRef.get();
 
             if (!(targetUserDataGet.exists)) {
@@ -193,20 +196,21 @@ export function initGroupsRoutes(app: Express, db: firestore.Firestore) {
             // target user validation
             let targetUser:any = null;
             db.collection("Users")
-                .where("email", "==", request.body.email)
-                .get()
-                .then((value: firestore.QuerySnapshot<firestore.DocumentData>) => {
-                    if (value.empty) {
-                        response.status(400).json({message: "This target user doesn't exist."});
-                        return;
-                    }
-                    targetUser = value.docs[0].id;
-                });
+                    .where("Email", "==", request.body.email)
+                    .get()
+                    .then((value: firestore.QuerySnapshot<firestore.DocumentData>) => {
+                        logger.info(value.docs);
+                        if (value.size != 1) {
+                            response.status(400).json({message: "This target user doesn't exist."});
+                            return;
+                        }
+                        targetUser = value.docs[0].id;
+                    });
 
-            if (targetUser === null) {
-                return;
-            }
-            const targetUserRef = db.collection("Users").doc(targetUser.uid);
+                if (targetUser === null) {
+                    return;
+                }
+            const targetUserRef = db.collection("Users").doc(targetUser);
             const targetUserDataGet = await targetUserRef.get();
 
             if (!(targetUserDataGet.exists)) {
@@ -267,10 +271,11 @@ export function initGroupsRoutes(app: Express, db: firestore.Firestore) {
             // target user validation
             let targetUser:any = null;
             db.collection("Users")
-                .where("email", "==", request.body.email)
+                .where("Email", "==", request.body.email)
                 .get()
                 .then((value: firestore.QuerySnapshot<firestore.DocumentData>) => {
-                    if (value.empty) {
+                    logger.info(value.docs);
+                    if (value.size != 1) {
                         response.status(400).json({message: "This target user doesn't exist."});
                         return;
                     }
@@ -280,7 +285,7 @@ export function initGroupsRoutes(app: Express, db: firestore.Firestore) {
             if (targetUser === null) {
                 return;
             }
-            const targetUserRef = db.collection("Users").doc(targetUser.uid);
+            const targetUserRef = db.collection("Users").doc(targetUser);
             const targetUserDataGet = await targetUserRef.get();
 
             if (!(targetUserDataGet.exists)) {
@@ -316,7 +321,12 @@ export function initGroupsRoutes(app: Express, db: firestore.Firestore) {
             });
         });
 
-    // app.put(baseUrl + "/leave/:groupName", );
+    app.put(baseUrl + "/leave/:groupName",
+        (req: any, res: any, next: any) =>
+            isConnectedMiddleware(req, res, next, db, false),
+        async (request: any, response: any) => {
+            
+        });
 
     // // delete group
     // app.delete(baseUrl + "/:groupName", );

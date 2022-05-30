@@ -361,7 +361,7 @@
 							"variable": [
 								{
 									"key": "groupName",
-									"value": ""
+									"value": "Group1"
 								}
 							]
 						}
@@ -397,6 +397,70 @@
 								{
 									"key": "groupName",
 									"value": "Group1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Comments",
+			"item": [
+				{
+					"name": "Post Comment",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"comment\": \"Hi this is a comment!\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}//:document/comments",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"",
+								":document",
+								"comments"
+							],
+							"variable": [
+								{
+									"key": "document",
+									"value": "<TestDoc>"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Comments",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}//:document/comments",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"",
+								":document",
+								"comments"
+							],
+							"variable": [
+								{
+									"key": "document",
+									"value": "<TestDoc>"
 								}
 							]
 						}

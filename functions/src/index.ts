@@ -8,6 +8,7 @@ import * as cors from "cors";
 import {initDeviceRoutes} from "./device";
 import {initGroupsRoutes} from "./groups";
 import {FieldValue} from "firebase-admin/firestore";
+import {initDocumentRoutes} from "./document";
 
 admin.initializeApp(functions.config().firebase);
 const db = admin.firestore();
@@ -31,6 +32,8 @@ initMessagesRoutes(app, db, storage);
 initGroupsRoutes(app, db);
 
 initDeviceRoutes(app, db);
+
+initDocumentRoutes(app, db, storage);
 
 app.use((req: any, res: any) => {
     res.status(404).json({message: "This route doesn't exist."});

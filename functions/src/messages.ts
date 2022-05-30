@@ -45,6 +45,7 @@ export async function sendMessage(
     chatName: string,
     message: string,
     uid: string,
+    email = "",
     systemMessage = false,
     updateLastUpdate = true,
     filepath = ""
@@ -52,6 +53,7 @@ export async function sendMessage(
     await db.collection("Chats").doc(chatName).collection("Messages").add({
         message: message,
         user: uid,
+        email: email,
         createdAt: FieldValue.serverTimestamp(),
         systemMessage: systemMessage,
         filepath: filepath,
@@ -107,7 +109,7 @@ export function initMessagesRoutes(app: Express, db: firestore.Firestore, storag
                 return;
             }
 
-            sendMessage(db, request.params.chatName, request.body.message, request.user.uid)
+            sendMessage(db, request.params.chatName, request.body.message, request.user.uid, request.user.email)
                 .then((_value) => {
                     response.status(201).json({message: "Message send."});
                 }).catch((err: any) => {
@@ -242,7 +244,7 @@ async function sendFile(req: any, res: any, upload: any, storage: Storage, db: a
         destination: req.params.chatName + "/" + upload.filename,
     });
     fs.unlinkSync(upload.filepath);
-    sendMessage(db, req.params.chatName, "", req.user.uid, false, true, upload.filename)
+    sendMessage(db, req.params.chatName, "", req.user.uid, req.user.email, false, true, upload.filename)
         .then((_value) => {
             res.status(201).json({message: "File send."});
         }).catch((err: any) => {

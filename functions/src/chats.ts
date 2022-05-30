@@ -31,7 +31,7 @@ export function initChatsRoutes(app: Express, db: firestore.Firestore, storage: 
                 response.status(201).json({message: "Chat created."});
 
                 try {
-                    sendMessage(db, request.params.chatName, "Chat created.", request.user.uid, true, false);
+                    sendMessage(db, request.params.chatName, "Chat created.", request.user.uid, request.user.email, true, false);
                 } catch (err: any) {
                     return;
                 }
@@ -122,7 +122,7 @@ export function initChatsRoutes(app: Express, db: firestore.Firestore, storage: 
                 response.status(200).json({message: "Join chat."});
 
                 try {
-                    sendMessage(db, request.params.chatName, "User " + request.user.uid + " join the chat.", request.user.uid, true, true);
+                    sendMessage(db, request.params.chatName, "User " + request.user.uid + " join the chat.", request.user.uid, request.user.email, true, true);
                 } catch (err: any) {
                     return;
                 }
@@ -164,7 +164,7 @@ export function initChatsRoutes(app: Express, db: firestore.Firestore, storage: 
                 response.status(200).json({message: "Leave chat."});
 
                 try {
-                    sendMessage(db, request.params.chatName, "User " + request.user.uid + " leave the chat.", request.user.uid, true, true);
+                    sendMessage(db, request.params.chatName, "User " + request.user.uid + " leave the chat.", request.user.uid, request.user.email, true, true);
                 } catch (err: any) {
                     return;
                 }

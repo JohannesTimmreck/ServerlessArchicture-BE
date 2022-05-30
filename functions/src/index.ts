@@ -6,6 +6,7 @@ import {initChatsRoutes} from "./chats";
 import {initMessagesRoutes} from "./messages";
 import * as cors from "cors";
 import {initDeviceRoutes} from "./device";
+import {FieldValue} from "firebase-admin/firestore";
 
 admin.initializeApp(functions.config().firebase);
 const db = admin.firestore();
@@ -93,5 +94,9 @@ export const createUser = functions.region("europe-west1").auth.user().onCreate(
         Roles: ["User"],
         Rights: [],
         Devices: [],
+    });
+
+    db.collection("Chats").doc("files").update({
+        user: FieldValue.arrayUnion(user.uid),
     });
 });
